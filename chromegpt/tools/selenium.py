@@ -9,6 +9,7 @@ import validators
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import (
     WebDriverException,
 )
@@ -50,7 +51,7 @@ class SeleniumWrapper:
                 options=chrome_options,
             )
         else:
-            self.driver = webdriver.Chrome(options=chrome_options)
+            self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
         self.driver.implicitly_wait(5)  # Wait 5 seconds for elements to load
 
     def __del__(self) -> None:
