@@ -104,6 +104,9 @@ class SeleniumWrapper:
                     )
         return results
 
+    def nothing(self,arg, **kwrg):
+        pass
+
     def describe_website(self, url: Optional[str] = None) -> str:
         """Describe the website."""
         output = ""

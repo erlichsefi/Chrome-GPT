@@ -17,25 +17,25 @@ from chromegpt.tools.selenium import (
 )
 
 
-def get_agent_tools() -> List[BaseTool]:
+def get_agent_tools(abstract_only: bool) -> List[BaseTool]:
     """Get the tools that will be used by the AI agent."""
     selenium = SeleniumWrapper()
     tools: List[BaseTool] = [
         Tool(
             name="goto",
-            func=selenium.describe_website,
+            func=selenium.nothing if abstract_only else selenium.describe_website,
             description="useful for when you need visit a link or a website",
             args_schema=DescribeWebsiteInput,
         ),
         Tool(
             name="click",
-            func=selenium.click_button_by_text,
+            func=selenium.nothing if abstract_only else selenium.click_button_by_text,
             description="useful for when you need to click a button/link",
             args_schema=ClickButtonInput,
         ),
         Tool(
             name="find_form",
-            func=selenium.find_form_inputs,
+            func=selenium.nothing if abstract_only else selenium.find_form_inputs,
             description=(
                 "useful for when you need to find out input forms given a url. Returns"
                 " the input fields to fill out"
@@ -44,7 +44,7 @@ def get_agent_tools() -> List[BaseTool]:
         ),
         Tool(
             name="fill_form",
-            func=selenium.fill_out_form,  # type: ignore
+            func=selenium.nothing if abstract_only else selenium.fill_out_form,  # type: ignore
             description=(
                 "useful for when you need to fill out a form on the current website."
                 " Input should be a json formatted string"
@@ -53,7 +53,7 @@ def get_agent_tools() -> List[BaseTool]:
         ),
         Tool(
             name="scroll",
-            func=selenium.scroll,
+            func=selenium.nothing if abstract_only else selenium.scroll,
             description=(
                 "useful for when you need to scroll up or down on the current website"
             ),

@@ -12,6 +12,7 @@ from langchain.tools.human.tool import HumanInputRun
 from chromegpt.agent.autogpt.prompt import AutoGPTPrompt
 from chromegpt.agent.chromegpt_agent import ChromeGPTAgent
 from chromegpt.agent.utils import get_agent_tools, get_vectorstore
+from chromegpt.callback import HumanActionCallBack
 
 
 class AutoGPTAgent(ChromeGPTAgent):
@@ -32,7 +33,7 @@ class AutoGPTAgent(ChromeGPTAgent):
         self, llm: ChatOpenAI, verbose: bool, human_in_the_loop: bool = False
     ) -> AutoGPT:
         vectorstore = get_vectorstore()
-        tools = get_agent_tools()
+        tools = get_agent_tools(abstract_only=True)
         ai_name = "Jarvis"
 
         prompt = AutoGPTPrompt(
@@ -43,7 +44,7 @@ class AutoGPTAgent(ChromeGPTAgent):
             token_counter=llm.get_num_tokens,
         )
         human_feedback_tool = HumanInputRun() if human_in_the_loop else None
-        chain = LLMChain(llm=llm, prompt=prompt)
+        chain = LLMChain(llm=llm, prompt=prompt, callbacks=[HumanActionCallBack])
         agent = AutoGPT(
             ai_name,
             vectorstore.as_retriever(),  # type: ignore
